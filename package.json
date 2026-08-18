@@ -1,0 +1,9 @@
+{
+  "name": "property-maintenance-delayed-follow-up",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --experimental-strip-types src/maintenance_follow_up.test.ts",
+    "run": "node --experimental-strip-types src/maintenance_follow_up.ts"
+  }
+}
