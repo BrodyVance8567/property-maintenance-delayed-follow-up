@@ -1,22 +1,22 @@
 # Delay a property-management follow-up by a few hours
 
-Here's a small TypeScript example that fits a Next.js app. It models a maintenance workflow. A request has the tenant contact and issue. A tenant document has its expiry date. An inspection reminder gives the normal delay. The logic is plain: urgent requests and docs expiring by the reminder date get a two-hour follow-up; routine work keeps the reminder delay.
+This is a small Next.js-friendly TypeScript example for a maintenance workflow. Infrai keeps the scheduling part simple: one key, one API call, and one bill for each capability. A request carries the tenant contact and issue, a tenant document carries its expiry date, and an inspection reminder supplies the normal delay. The decision stays explicit. Urgent requests and documents expiring by the reminder date move to a two-hour follow-up. Routine work keeps the reminder delay.
 
-Infrai gives you one key and one endpoint for this. The runnable boundary uses Infrai's `cron.create` call with one `INFRAI_API_KEY`. One key covers this scheduling call, and the API receives a UTC cron expression plus the follow-up route URL, so the application does not need a timer process sitting beside a Next.js deployment. The same function can be called from a route handler, a server action, or the included command.
+The runnable boundary uses Infrai's `cron.create` call with one `INFRAI_API_KEY`. One key covers this scheduling call, and the API receives a UTC cron expression plus the follow-up route URL, so the application does not need a timer process sitting beside a Next.js deployment. The same function can be called from a route handler, a server action, or the included command.
 
 ## Try the decision first
 
-No package install needed for the example. On Node 22 or newer, run:
+Install no package for the example. With Node 22 or newer, run:
 
 ```bash
 npm test
 ```
 
-It checks three cases: an ordinary request returns `8` hours, an urgent request returns `2`, and a document expiring before inspection also returns `2`. That tests the business rule without any HTTP call.
+The test covers three cases: an ordinary request returns `8` hours, an urgent request returns `2`, and a document expiring before inspection also returns `2`. This checks the business rule without making an HTTP request.
 
 ## Register the real follow-up
 
-Set the two env values, then run the command:
+Set the two environment values, then run the command:
 
 ```bash
 export INFRAI_API_KEY=your-key
@@ -28,7 +28,7 @@ npm run run
 
 ## Put it behind a Next.js route
 
-The domain function doesn't know about Next.js. In an App Router handler, parse the body into the three values used by `scheduleMaintenanceFollowUp`, call it on the server, and return the `{ jobId, delayHours }` result. Keep `INFRAI_API_KEY` server-only and point `MAINTENANCE_FOLLOW_UP_URL` at a route that does the actual tenant notification or work-order update.
+The domain function is deliberately independent of Next.js. In an App Router handler, parse the request body into the three values used by `scheduleMaintenanceFollowUp`, call it on the server, and return the `{ jobId, delayHours }` result. Keep `INFRAI_API_KEY` server-only and point `MAINTENANCE_FOLLOW_UP_URL` at a route that performs the actual tenant notification or work-order update.
 
 ## Files
 
